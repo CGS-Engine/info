@@ -18,7 +18,7 @@
     header{text-align:center;margin:10px 0 18px}
     .brand{display:flex;align-items:center;justify-content:center;gap:10px}
     .logo{width:40px;height:40px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:28px}
+    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
 
     .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
@@ -31,14 +31,16 @@
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
     .btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
 
-    /* Desktop preview */
+    /* Desktop embedded PDF */
     .viewer{display:none;margin-top:16px;background:var(--frame);border-radius:14px;padding:10px}
     .viewer embed{width:100%;height:78vh;border:0;border-radius:8px;background:var(--frame)}
 
     /* Mobile multipage preview */
     .mobile-preview{display:block;margin-top:16px;background:var(--frame);border-radius:14px;padding:8px;max-height:85svh;overflow:auto;-webkit-overflow-scrolling:touch}
+    .quality{display:flex;justify-content:flex-end;align-items:center;margin:2px 2px 8px;color:#2c2a24;font-size:12px}
+    .quality input{margin-right:6px;accent-color:#1f5ad4}
     #previewPages{display:flex;flex-direction:column;gap:8px}
-    .page-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--frame)}
+    .page-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--frame);image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast}
     .preview-note{color:#362f1d;font-size:12px;margin:6px 4px 0}
 
     footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 6px}
@@ -54,7 +56,7 @@
       .mobile-preview{display:none}
     }
   </style>
-  <!-- PDF.js for reliable mobile multi-page preview -->
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     if (window['pdfjsLib']) {
@@ -87,6 +89,9 @@
 
     <!-- Mobile multipage preview (PDF.js) -->
     <section class="mobile-preview" aria-label="Preview (mobile)">
+      <div class="quality">
+        <label for="hdToggle"><input type="checkbox" id="hdToggle"> HD (4×) preview</label>
+      </div>
       <div id="previewPages"></div>
       <div class="preview-note">Swipe to browse pages. Tap <strong>Open full-screen</strong> for the native viewer on iPhone.</div>
     </section>
@@ -106,30 +111,40 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const embedEl = document.getElementById('pdfEmbed');
     const pagesContainer = document.getElementById('previewPages');
+    const hdToggle = document.getElementById('hdToggle');
 
     const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
 
-    // Lazy-render each page when it scrolls into view
-    function setupLazyRenderer(pdf){
+    let scaleCap = 3; // default crisp mode
+
+    function setupLazyRenderer(pdf, cap){
       const options = { root: document.querySelector('.mobile-preview'), threshold: 0.1 };
       const io = new IntersectionObserver(async (entries) => {
         for (const entry of entries){
-          if (entry.isIntersecting){
-            const canvas = entry.target;
-            if (canvas.dataset.rendered === 'true') continue;
-            const pageIndex = parseInt(canvas.dataset.page, 10);
-            const page = await pdf.getPage(pageIndex);
-            const viewport = page.getViewport({ scale: 1 });
-            const cssWidth = canvas.parentElement.clientWidth; // fit to container width
-            const scale = cssWidth / viewport.width;
-            const scaled = page.getViewport({ scale });
-            canvas.width = Math.floor(scaled.width);
-            canvas.height = Math.floor(scaled.height);
-            const ctx = canvas.getContext('2d');
-            await page.render({ canvasContext: ctx, viewport: scaled, background: '#faf6eb' }).promise;
-            canvas.dataset.rendered = 'true';
-            io.unobserve(canvas);
-          }
+          if (!entry.isIntersecting) continue;
+          const canvas = entry.target;
+          if (canvas.dataset.rendered === 'true') continue;
+
+          const pageIndex = parseInt(canvas.dataset.page, 10);
+          const page = await pdf.getPage(pageIndex);
+
+          const viewport1x = page.getViewport({ scale: 1 });
+          const cssWidth = canvas.parentElement.clientWidth;
+          const baseScale = cssWidth / viewport1x.width;
+          const dpr = Math.min(cap, window.devicePixelRatio || 1);  // cap based on toggle (3× or 4×)
+          const scaledViewport = page.getViewport({ scale: baseScale * dpr });
+
+          canvas.width  = Math.floor(scaledViewport.width);
+          canvas.height = Math.floor(scaledViewport.height);
+          canvas.style.width  = Math.floor(scaledViewport.width  / dpr) + 'px';
+          canvas.style.height = Math.floor(scaledViewport.height / dpr) + 'px';
+
+          const ctx = canvas.getContext('2d', { alpha: false });
+          ctx.imageSmoothingEnabled = false;
+
+          await page.render({ canvasContext: ctx, viewport: scaledViewport, background: '#faf6eb' }).promise;
+          canvas.dataset.rendered = 'true';
+          io.unobserve(canvas);
         }
       }, options);
       return io;
@@ -139,7 +154,8 @@
       if (!window['pdfjsLib']) return;
       pagesContainer.innerHTML = '';
       const pdf = await pdfjsLib.getDocument(url).promise;
-      const io = setupLazyRenderer(pdf);
+      const io = setupLazyRenderer(pdf, scaleCap);
+
       for (let p = 1; p <= pdf.numPages; p++){
         const c = document.createElement('canvas');
         c.className = 'page-canvas';
@@ -152,7 +168,7 @@
 
     function applyDoc(doc){
       // Links
-      openFull.href = doc.file; // great on mobile
+      openFull.href = doc.file;
       downloadBtn.href = doc.file;
       downloadBtn.download = doc.file.split('/').pop();
 
@@ -174,6 +190,15 @@
       if (i===0) applyDoc(doc);
     });
 
+    // HD toggle
+    if (hdToggle) {
+      hdToggle.addEventListener('change', () => {
+        scaleCap = hdToggle.checked ? 4 : 3;
+        const current = documents.find(d => openFull.href.endsWith(d.file));
+        if (current && isMobile()) renderMobilePreview(current.file);
+      });
+    }
+
     // Re-render on resize/orientation
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -188,4 +213,3 @@
   </script>
 </body>
 </html>
-
