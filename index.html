@@ -75,6 +75,37 @@
       .viewer-standalone{padding:8px;border-radius:14px}
       iframe{border-radius:8px}
     }
+      /* --- Compact mobile-first refinements --- */
+    @media (max-width:760px){
+      .wrap{padding:14px}
+      h1{font-size:22px}
+      .subtitle{font-size:13px}
+
+      /* Controls card: soften look + tighter spacing */
+      .card{padding:12px;border-radius:14px;background:#0e1524;border-color:#1f2a44}
+
+      /* Turn document list into compact horizontal chips */
+      .doc-list{display:flex;overflow-x:auto;gap:8px;padding:2px 2px 8px;margin:0 0 10px}
+      .doc-list::-webkit-scrollbar{height:6px}
+      .doc-list::-webkit-scrollbar-thumb{background:#22324d;border-radius:10px}
+
+      .doc-btn{
+        padding:10px 12px;font-size:13px;border-radius:10px;
+        border:1px solid #9ec0ff;
+        background:linear-gradient(145deg,#1a2740,#111b2d);
+        box-shadow:none; /* remove heavy inner shadows on mobile */
+        white-space:nowrap
+      }
+
+      /* Action buttons side-by-side, smaller */
+      .dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+      a.btn{padding:12px;justify-content:center;font-size:14px;border-color:#1f2a44;background:#121a2e}
+      a.btn:hover{background:#15223a}
+
+      /* Viewer: thinner champagne frame, less rounding, taller space */
+      .viewer-standalone{margin-top:12px;padding:6px;border-radius:12px}
+      iframe{height:85svh;border-radius:8px}
+    }
   </style>
 </head>
 <body>
@@ -120,7 +151,7 @@
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
     ];
-
+    
     const docList = document.getElementById('docList');
     const frame = document.getElementById('pdfFrame');
     const dl = document.getElementById('downloadCurrent');
