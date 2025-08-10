@@ -7,27 +7,28 @@
   <meta name="description" content="Browse, preview, and download PDF resources from CGS Tech." />
   <style>
     :root{
-      --bg:#083355;
-      --card:#12141b;
+      --bg:#083355;        /* page background */
+      --card:#12141b;      /* dark card for buttons only */
       --text:#e7e8ea;
       --muted:#a7acb8;
       --accent:#6aa5ff;
       --accent2:#8df;
       --border:#242837;
-      --frame:#f6e7c1; /* champagne tone */
-      --btn-border:#8fb8ff;
+      --frame:#faf6eb;     /* lighter champagne (near-white) around PDF */
+      --btn-border:#8fb8ff;/* brighter button border */
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
+
     header{display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0 24px;text-align:center}
     .brand{display:flex;align-items:center;gap:10px}
     .logo{width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.4)}
     h1{font-size:28px;margin:0;color:var(--text);letter-spacing:.3px;font-weight:700}
     .subtitle{font-size:15px;color:var(--muted)}
 
+    /* Buttons live in a dark card for contrast */
     .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-
     .doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
     .doc-btn{
       appearance:none;
@@ -53,8 +54,8 @@
     a.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#131a2a}
     a.btn:hover{background:#152039}
 
-    /* Clean single champagne frame */
-    .viewer{border-radius:16px;overflow:hidden;background:var(--frame);padding:10px}
+    /* Standalone viewer: NO dark card/frame around it */
+    .viewer-standalone{margin-top:16px;background:var(--frame);border-radius:16px;padding:10px}
     iframe{width:100%;height:70vh;border:0;background:var(--frame);border-radius:10px}
 
     .notice{color:var(--muted);font-size:14px;margin:10px 2px}
@@ -72,16 +73,19 @@
       <div class="subtitle">Browse, preview, and download our PDF resources</div>
     </header>
 
-    <section class="card">
+    <!-- Buttons & controls inside dark card -->
+    <section class="card" aria-label="Document controls">
       <div class="doc-list" id="docList"></div>
       <div class="dl">
         <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
         <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
       </div>
-      <p class="notice">Tip: If your browser blocks embedded PDF viewing, use “Open in new tab.”</p>
-      <div class="viewer" role="region">
-        <iframe id="pdfFrame" title="PDF viewer"></iframe>
-      </div>
+      <p class="notice">Tip: If your browser blocks embedded PDFs, use “Open in new tab.”</p>
+    </section>
+
+    <!-- Standalone champagne viewer (no outer dark frame) -->
+    <section class="viewer-standalone" role="region" aria-label="PDF viewer">
+      <iframe id="pdfFrame" title="PDF viewer"></iframe>
     </section>
 
     <footer>© <span id="y"></span> CGS Tech. All rights reserved.</footer>
