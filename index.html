@@ -6,83 +6,61 @@
   <title>CGS Tech Document Hub</title>
   <style>
     :root{
-      --bg:#083355;            /* page background */
-      --text:#e7e8ea;
-      --muted:#a7acb8;
-      --card:#0f1828;          /* cards on mobile */
-      --border:#1f2a44;
-      --btn-border:#8fb8ff;    /* bright border like logo highlight */
-      --frame:#faf6eb;         /* warm “champagne” viewer bg on desktop */
+      --bg:#083355;
+      --text:#e7e8ea; --muted:#a7acb8;
+      --card:#0f1828; --border:#1f2a44;
+      --btn-border:#8fb8ff; --frame:#faf6eb;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
     .wrap{max-width:1100px;margin:0 auto;padding:20px}
 
-    /* Header */
-    header{ text-align:center; margin:10px 0 18px }
-    .brand{ display:flex; align-items:center; justify-content:center; gap:10px }
-    .logo{ width:40px; height:40px; border-radius:9px;
-      background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
-    }
-    h1{ margin:0; font-weight:800; letter-spacing:.2px; font-size:28px }
-    .subtitle{ color:var(--muted); font-size:14px; margin-top:6px }
+    header{text-align:center;margin:10px 0 18px}
+    .brand{display:flex;align-items:center;justify-content:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:28px}
+    .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
 
-    /* Document buttons */
-    .panel{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px }
-    .docs{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x mandatory }
-    .docs::-webkit-scrollbar{ height:8px } .docs::-webkit-scrollbar-thumb{ background:#22324d; border-radius:8px }
-    .doc-btn{
-      scroll-snap-align:start;
-      border:1px solid var(--btn-border);
-      background:linear-gradient(145deg, #1b273d, #0f1828);
-      color:var(--text);
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:600;
-      white-space:nowrap;
-      cursor:pointer;
-      transition:transform .1s ease, border-color .2s ease, background .2s ease;
-      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);
-    }
-    .doc-btn:hover{ background:linear-gradient(145deg,#22324d,#152036); border-color:#bcd6ff }
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
+    .docs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x mandatory}
+    .docs::-webkit-scrollbar{height:8px}.docs::-webkit-scrollbar-thumb{background:#22324d;border-radius:8px}
+    .doc-btn{scroll-snap-align:start;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);padding:10px 14px;border-radius:10px;font-weight:600;white-space:nowrap;cursor:pointer;transition:transform .1s ease,border-color .2s ease,background .2s ease;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
+    .doc-btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
 
-    /* Actions (mobile) */
-    .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px }
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      border:1px solid var(--btn-border);
-      background:linear-gradient(145deg,#1b273d,#0f1828);
-      color:var(--text); text-decoration:none;
-      padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px;
-      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);
-    }
-    .btn:hover{ background:linear-gradient(145deg,#22324d,#152036); border-color:#bcd6ff }
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
+    .btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
 
-    /* Desktop viewer (hidden on phones) */
-    .viewer{ display:none; margin-top:16px; background:var(--frame); border-radius:14px; padding:10px }
-    .viewer embed{ width:100%; height:78vh; border:0; border-radius:8px; background:var(--frame) }
+    /* Desktop preview */
+    .viewer{display:none;margin-top:16px;background:var(--frame);border-radius:14px;padding:10px}
+    .viewer embed{width:100%;height:78vh;border:0;border-radius:8px;background:var(--frame)}
 
-    /* Footer */
-    footer{ text-align:center; color:var(--muted); font-size:12px; margin:18px 0 6px }
+    /* Mobile multipage preview */
+    .mobile-preview{display:block;margin-top:16px;background:var(--frame);border-radius:14px;padding:8px;max-height:85svh;overflow:auto;-webkit-overflow-scrolling:touch}
+    #previewPages{display:flex;flex-direction:column;gap:8px}
+    .page-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--frame)}
+    .preview-note{color:#362f1d;font-size:12px;margin:6px 4px 0}
 
-    /* Desktop / tablets */
-    @media (min-width: 761px){
-      .wrap{ padding:24px }
-      h1{ font-size:34px }
-      .panel{ display:flex; align-items:center; gap:14px; padding:14px 16px }
-      .docs{ flex:1; overflow-x:visible; flex-wrap:wrap; padding:0; gap:10px }
-      .doc-btn{ padding:12px 16px; border-radius:12px }
-      .actions{ grid-template-columns:auto auto; gap:10px }
-      .viewer{ display:block }                 /* show embedded preview on desktop */
-      .btn.open-full{ display:none }           /* hide mobile-only open-full button on desktop */
-    }
+    footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 6px}
 
-    /* Mobile tweaks */
-    @media (max-width: 760px){
-      h1{ font-size:22px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    @media (min-width:761px){
+      .wrap{padding:24px}
+      h1{font-size:34px}
+      .panel{display:flex;align-items:center;gap:14px;padding:14px 16px}
+      .docs{flex:1;overflow-x:visible;flex-wrap:wrap;padding:0;gap:10px}
+      .doc-btn{padding:12px 16px;border-radius:12px}
+      .actions{grid-template-columns:auto auto;gap:10px}
+      .viewer{display:block}
+      .mobile-preview{display:none}
     }
   </style>
+  <!-- PDF.js for reliable mobile multi-page preview -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    if (window['pdfjsLib']) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
 </head>
 <body>
   <div class="wrap">
@@ -94,69 +72,118 @@
       <div class="subtitle">Browse, preview, and download our PDF resources</div>
     </header>
 
-    <!-- Controls -->
     <section class="panel" aria-label="Choose a document">
       <div id="docList" class="docs"></div>
       <div class="actions">
-        <!-- Mobile-first: one-tap open full-screen + download -->
         <a id="openFull" class="btn open-full" target="_blank" rel="noopener">🗔 Open full-screen</a>
         <a id="downloadBtn" class="btn" download>⬇️ Download</a>
       </div>
     </section>
 
-    <!-- Desktop embedded preview -->
-    <section class="viewer" aria-label="Preview">
+    <!-- Desktop embedded PDF -->
+    <section class="viewer" aria-label="Preview (desktop)">
       <embed id="pdfEmbed" type="application/pdf" />
+    </section>
+
+    <!-- Mobile multipage preview (PDF.js) -->
+    <section class="mobile-preview" aria-label="Preview (mobile)">
+      <div id="previewPages"></div>
+      <div class="preview-note">Swipe to browse pages. Tap <strong>Open full-screen</strong> for the native viewer on iPhone.</div>
     </section>
   </div>
 
   <footer>© 2025 CGS Tech. All rights reserved.</footer>
 
   <script>
-    // 1) List your docs here
+    // Documents — update paths as needed
     const documents = [
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
     ];
 
-    // 2) Elements
     const docList = document.getElementById('docList');
     const openFull = document.getElementById('openFull');
     const downloadBtn = document.getElementById('downloadBtn');
     const embedEl = document.getElementById('pdfEmbed');
+    const pagesContainer = document.getElementById('previewPages');
 
-    // 3) Simple responsive check
     const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
 
-    function applyDoc(doc) {
-      // Always set a good open link (works great on iPhone)
-      openFull.href = doc.file;
+    // Lazy-render each page when it scrolls into view
+    function setupLazyRenderer(pdf){
+      const options = { root: document.querySelector('.mobile-preview'), threshold: 0.1 };
+      const io = new IntersectionObserver(async (entries) => {
+        for (const entry of entries){
+          if (entry.isIntersecting){
+            const canvas = entry.target;
+            if (canvas.dataset.rendered === 'true') continue;
+            const pageIndex = parseInt(canvas.dataset.page, 10);
+            const page = await pdf.getPage(pageIndex);
+            const viewport = page.getViewport({ scale: 1 });
+            const cssWidth = canvas.parentElement.clientWidth; // fit to container width
+            const scale = cssWidth / viewport.width;
+            const scaled = page.getViewport({ scale });
+            canvas.width = Math.floor(scaled.width);
+            canvas.height = Math.floor(scaled.height);
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport: scaled, background: '#faf6eb' }).promise;
+            canvas.dataset.rendered = 'true';
+            io.unobserve(canvas);
+          }
+        }
+      }, options);
+      return io;
+    }
 
-      // Keep a clean filename for downloads
-      downloadBtn.href = doc.file;
-      downloadBtn.download = doc.file.split('/').pop();
-
-      // Only load the embedded preview on desktop/tablet
-      if (!isMobile()) {
-        const params = (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
-        embedEl.src = doc.file + params;
+    async function renderMobilePreview(url){
+      if (!window['pdfjsLib']) return;
+      pagesContainer.innerHTML = '';
+      const pdf = await pdfjsLib.getDocument(url).promise;
+      const io = setupLazyRenderer(pdf);
+      for (let p = 1; p <= pdf.numPages; p++){
+        const c = document.createElement('canvas');
+        c.className = 'page-canvas';
+        c.dataset.page = String(p);
+        c.dataset.rendered = 'false';
+        pagesContainer.appendChild(c);
+        io.observe(c);
       }
     }
 
-    // Build buttons and load the first doc
-    documents.forEach((doc, i) => {
+    function applyDoc(doc){
+      // Links
+      openFull.href = doc.file; // great on mobile
+      downloadBtn.href = doc.file;
+      downloadBtn.download = doc.file.split('/').pop();
+
+      if (!isMobile()){
+        const params = (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
+        embedEl.src = doc.file + params;
+      } else {
+        embedEl.removeAttribute('src');
+        renderMobilePreview(doc.file);
+      }
+    }
+
+    // Build buttons
+    documents.forEach((doc, i) =>{
       const b = document.createElement('button');
-      b.className = 'doc-btn';
-      b.textContent = doc.name;
+      b.className = 'doc-btn'; b.textContent = doc.name;
       b.addEventListener('click', () => applyDoc(doc));
       docList.appendChild(b);
-      if (i === 0) applyDoc(doc);
+      if (i===0) applyDoc(doc);
     });
 
-    // Re-apply if the screen size changes (rotate, resize)
+    // Re-render on resize/orientation
+    let resizeTimer;
     window.addEventListener('resize', () => {
-      const current = documents.find(d => openFull.href.endsWith(d.file));
-      if (current) applyDoc(current);
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const current = documents.find(d => openFull.href.endsWith(d.file));
+        if (!current) return;
+        if (isMobile()) renderMobilePreview(current.file);
+        else applyDoc(current);
+      }, 150);
     });
   </script>
 </body>
