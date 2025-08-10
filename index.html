@@ -15,6 +15,7 @@
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
     .wrap{max-width:1100px;margin:0 auto;padding:20px}
 
+    /* Header */
     header{text-align:center;margin:10px 0 18px}
     .brand{display:flex;align-items:center;justify-content:center;gap:10px}
     .logo{width:40px;height:40px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.35)}
@@ -22,19 +23,35 @@
     @media (min-width:761px){h1{font-size:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
     .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
 
+    /* Controls card */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
     .docs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x mandatory}
     .docs::-webkit-scrollbar{height:8px}.docs::-webkit-scrollbar-thumb{background:#22324d;border-radius:8px}
-    .doc-btn{scroll-snap-align:start;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);padding:10px 14px;border-radius:10px;font-weight:600;white-space:nowrap;cursor:pointer;transition:transform .1s ease,border-color .2s ease,background .2s ease;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
+    .doc-btn{
+      scroll-snap-align:start;border:1px solid var(--btn-border);
+      background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);
+      padding:10px 14px;border-radius:10px;font-weight:600;white-space:nowrap;cursor:pointer;
+      transition:transform .1s ease,border-color .2s ease,background .2s ease;
+      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)
+    }
     .doc-btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
 
+    /* Action buttons */
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border:1px solid var(--btn-border);
+      background:linear-gradient(145deg,#1b273d,#0f1828);
+      color:var(--text);text-decoration:none;
+      padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;
+      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)
+    }
     .btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
 
     /* Desktop embedded PDF */
     .viewer{display:none;margin-top:16px;background:var(--frame);border-radius:14px;padding:10px}
-    .viewer embed{width:100%;height:78vh;border:0;border-radius:8px;background:var(--frame)}
+    .viewer iframe{width:100%;height:78vh;border:0;border-radius:8px;background:var(--frame)}
+    .viewer-fallback{background:rgba(0,0,0,.25);color:#fff;padding:10px;border-radius:8px;margin-bottom:8px;font-size:14px}
 
     /* Mobile multipage preview */
     .mobile-preview{display:block;margin-top:16px;background:var(--frame);border-radius:14px;padding:8px;max-height:85svh;overflow:auto;-webkit-overflow-scrolling:touch}
@@ -44,8 +61,10 @@
     .page-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--frame);image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast}
     .preview-note{color:#362f1d;font-size:12px;margin:6px 4px 0}
 
+    /* Footer */
     footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 20px}
 
+    /* Desktop/tablet layout tweaks */
     @media (min-width:761px){
       .wrap{padding:24px}
       .panel{display:flex;align-items:center;gap:14px;padding:14px 16px}
@@ -74,6 +93,7 @@
       <div class="subtitle">Browse, preview, and download our PDF resources</div>
     </header>
 
+    <!-- Controls -->
     <section class="panel" aria-label="Choose a document">
       <div id="docList" class="docs"></div>
       <div class="actions">
@@ -84,7 +104,10 @@
 
     <!-- Desktop embedded PDF -->
     <section class="viewer" aria-label="Preview (desktop)">
-      <embed id="pdfEmbed" type="application/pdf" />
+      <div id="viewerFallback" class="viewer-fallback" hidden>
+        Preview not available in this browser. Use <strong>Open full-screen</strong> above.
+      </div>
+      <iframe id="pdfFrameDesktop" title="PDF preview" allow="fullscreen"></iframe>
     </section>
 
     <!-- Mobile multipage preview (PDF.js) -->
@@ -100,21 +123,34 @@
   <footer>© 2025 CGS Tech. All rights reserved.</footer>
 
   <script>
+    // 1) List your docs here
     const documents = [
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
     ];
 
+    // 2) Elements
     const docList = document.getElementById('docList');
     const openFull = document.getElementById('openFull');
     const downloadBtn = document.getElementById('downloadBtn');
-    const embedEl = document.getElementById('pdfEmbed');
+    const frameEl = document.getElementById('pdfFrameDesktop');
+    const viewerFallback = document.getElementById('viewerFallback');
     const pagesContainer = document.getElementById('previewPages');
     const hdToggle = document.getElementById('hdToggle');
 
+    // 3) Helpers
     const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
 
-    let scaleCap = 3; 
+    function cacheBustedUrl(file){
+      const [path, hash] = file.split('#');
+      const sep = path.includes('?') ? '&' : '?';
+      const zoomHash = 'zoom=page-width&view=FitH';
+      const h = hash ? (hash + '&' + zoomHash) : zoomHash;
+      return `${path}${sep}v=${Date.now()}#${h}`;
+    }
+
+    // HiDPI lazy renderer for mobile
+    let scaleCap = 3; // default; HD toggle sets to 4
 
     function setupLazyRenderer(pdf, cap){
       const options = { root: document.querySelector('.mobile-preview'), threshold: 0.1 };
@@ -130,7 +166,7 @@
           const viewport1x = page.getViewport({ scale: 1 });
           const cssWidth = canvas.parentElement.clientWidth;
           const baseScale = cssWidth / viewport1x.width;
-          const dpr = Math.min(cap, window.devicePixelRatio || 1); 
+          const dpr = Math.min(cap, window.devicePixelRatio || 1); // 3× or 4×
           const scaledViewport = page.getViewport({ scale: baseScale * dpr });
 
           canvas.width  = Math.floor(scaledViewport.width);
@@ -154,7 +190,6 @@
       pagesContainer.innerHTML = '';
       const pdf = await pdfjsLib.getDocument(url).promise;
       const io = setupLazyRenderer(pdf, scaleCap);
-
       for (let p = 1; p <= pdf.numPages; p++){
         const c = document.createElement('canvas');
         c.className = 'page-canvas';
@@ -165,29 +200,39 @@
       }
     }
 
-    function cacheBustedUrl(file){
-      const [path, hash] = file.split('#');
-      const sep = path.includes('?') ? '&' : '?';
-      const zoomHash = 'zoom=page-width&view=FitH';
-      const h = hash ? (hash + '&' + zoomHash) : zoomHash;
-      return `${path}${sep}v=${Date.now()}#${h}`; 
-    }
-
     function applyDoc(doc){
+      // Update links
       openFull.href = doc.file;
       downloadBtn.href = doc.file;
       downloadBtn.download = doc.file.split('/').pop();
 
       if (!isMobile()){
-        embedEl.removeAttribute('src');
-        embedEl.setAttribute('type','application/pdf');
-        embedEl.src = cacheBustedUrl(doc.file);
+        // Desktop: load into iframe and show fallback if it fails to render
+        viewerFallback.hidden = true;
+        frameEl.removeAttribute('src');
+        const url = cacheBustedUrl(doc.file);
+
+        let loaded = false;
+        const onLoad = () => {
+          loaded = true;
+          viewerFallback.hidden = true;
+          frameEl.removeEventListener('load', onLoad);
+        };
+        frameEl.addEventListener('load', onLoad);
+
+        frameEl.src = url;
+
+        // If not loaded within 3s, show fallback note
+        setTimeout(() => { if (!loaded) viewerFallback.hidden = false; }, 3000);
       } else {
-        embedEl.removeAttribute('src');
+        // Mobile: clear iframe and render multipage preview
+        frameEl.removeAttribute('src');
+        viewerFallback.hidden = true;
         renderMobilePreview(doc.file);
       }
     }
 
+    // Build buttons and load the first doc
     documents.forEach((doc, i) =>{
       const b = document.createElement('button');
       b.className = 'doc-btn'; b.textContent = doc.name;
@@ -196,6 +241,7 @@
       if (i===0) applyDoc(doc);
     });
 
+    // HD toggle (mobile)
     if (hdToggle) {
       hdToggle.addEventListener('change', () => {
         scaleCap = hdToggle.checked ? 4 : 3;
@@ -204,6 +250,7 @@
       });
     }
 
+    // Re-apply on resize/orientation
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
