@@ -7,15 +7,15 @@
   <meta name="description" content="Browse, preview, and download PDF resources from CGS Tech." />
   <style>
     :root{
-      --bg:#083355; /* page background */
-      --card:#12141b; /* card (viewer) background */
+      --bg:#083355;
+      --card:#12141b;
       --text:#e7e8ea;
       --muted:#a7acb8;
       --accent:#6aa5ff;
       --accent2:#8df;
       --border:#242837;
-      --frame:#f9f3e1; /* very light gold for inner frame */
-      --btn-border:#8fb8ff; /* brighter border like logo highlight */
+      --frame:#f6e7c1; /* champagne tone */
+      --btn-border:#8fb8ff;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
@@ -40,7 +40,6 @@
       font-weight:600;
       text-align:center;
       transition:transform .1s ease, box-shadow .2s ease, background .3s ease, border-color .3s ease;
-      /* subtle top-left highlight like the logo */
       box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.3);
     }
     .doc-btn:hover{
@@ -54,9 +53,8 @@
     a.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#131a2a}
     a.btn:hover{background:#152039}
 
-    /* PDF viewer with inner gold frame and rounded corners */
-    .viewer{border:1px solid var(--border);border-radius:16px;padding:0;background:var(--card)}
-    .pdf-frame{background:var(--frame);border-radius:14px;padding:10px;overflow:hidden}
+    /* Clean single champagne frame */
+    .viewer{border-radius:16px;overflow:hidden;background:var(--frame);padding:10px}
     iframe{width:100%;height:70vh;border:0;background:var(--frame);border-radius:10px}
 
     .notice{color:var(--muted);font-size:14px;margin:10px 2px}
@@ -75,16 +73,14 @@
     </header>
 
     <section class="card">
-      <div class="doc-list" id="docList"><!-- Document buttons generated here --></div>
+      <div class="doc-list" id="docList"></div>
       <div class="dl">
         <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
         <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
       </div>
       <p class="notice">Tip: If your browser blocks embedded PDF viewing, use “Open in new tab.”</p>
       <div class="viewer" role="region">
-        <div class="pdf-frame">
-          <iframe id="pdfFrame" title="PDF viewer"></iframe>
-        </div>
+        <iframe id="pdfFrame" title="PDF viewer"></iframe>
       </div>
     </section>
 
