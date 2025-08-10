@@ -18,7 +18,8 @@
     header{text-align:center;margin:10px 0 18px}
     .brand{display:flex;align-items:center;justify-content:center;gap:10px}
     .logo{width:40px;height:40px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:22px}
+    @media (min-width:761px){h1{font-size:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
     .subtitle{color:var(--muted);font-size:14px;margin-top:6px}
 
     .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px}
@@ -43,11 +44,10 @@
     .page-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--frame);image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast}
     .preview-note{color:#362f1d;font-size:12px;margin:6px 4px 0}
 
-    footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 6px}
+    footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 20px}
 
     @media (min-width:761px){
       .wrap{padding:24px}
-      h1{font-size:34px}
       .panel{display:flex;align-items:center;gap:14px;padding:14px 16px}
       .docs{flex:1;overflow-x:visible;flex-wrap:wrap;padding:0;gap:10px}
       .doc-btn{padding:12px 16px;border-radius:12px}
@@ -100,7 +100,6 @@
   <footer>© 2025 CGS Tech. All rights reserved.</footer>
 
   <script>
-    // Documents — update paths as needed
     const documents = [
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
@@ -115,7 +114,7 @@
 
     const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
 
-    let scaleCap = 3; // default crisp mode
+    let scaleCap = 3; 
 
     function setupLazyRenderer(pdf, cap){
       const options = { root: document.querySelector('.mobile-preview'), threshold: 0.1 };
@@ -131,7 +130,7 @@
           const viewport1x = page.getViewport({ scale: 1 });
           const cssWidth = canvas.parentElement.clientWidth;
           const baseScale = cssWidth / viewport1x.width;
-          const dpr = Math.min(cap, window.devicePixelRatio || 1);  // cap based on toggle (3× or 4×)
+          const dpr = Math.min(cap, window.devicePixelRatio || 1); 
           const scaledViewport = page.getViewport({ scale: baseScale * dpr });
 
           canvas.width  = Math.floor(scaledViewport.width);
@@ -166,22 +165,29 @@
       }
     }
 
+    function cacheBustedUrl(file){
+      const [path, hash] = file.split('#');
+      const sep = path.includes('?') ? '&' : '?';
+      const zoomHash = 'zoom=page-width&view=FitH';
+      const h = hash ? (hash + '&' + zoomHash) : zoomHash;
+      return `${path}${sep}v=${Date.now()}#${h}`; 
+    }
+
     function applyDoc(doc){
-      // Links
       openFull.href = doc.file;
       downloadBtn.href = doc.file;
       downloadBtn.download = doc.file.split('/').pop();
 
       if (!isMobile()){
-        const params = (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
-        embedEl.src = doc.file + params;
+        embedEl.removeAttribute('src');
+        embedEl.setAttribute('type','application/pdf');
+        embedEl.src = cacheBustedUrl(doc.file);
       } else {
         embedEl.removeAttribute('src');
         renderMobilePreview(doc.file);
       }
     }
 
-    // Build buttons
     documents.forEach((doc, i) =>{
       const b = document.createElement('button');
       b.className = 'doc-btn'; b.textContent = doc.name;
@@ -190,7 +196,6 @@
       if (i===0) applyDoc(doc);
     });
 
-    // HD toggle
     if (hdToggle) {
       hdToggle.addEventListener('change', () => {
         scaleCap = hdToggle.checked ? 4 : 3;
@@ -199,7 +204,6 @@
       });
     }
 
-    // Re-render on resize/orientation
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
