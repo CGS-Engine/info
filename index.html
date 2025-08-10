@@ -51,7 +51,7 @@ a.btn{
 }
 a.btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#bcd6ff}
 .viewer-standalone{margin-top:16px;background:var(--frame);border-radius:16px;padding:10px}
-iframe{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10px}
+.pdf-embed{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10px;display:block}
 @media (max-width:760px){
   .wrap{padding:14px}
   .card{padding:12px;border-radius:14px}
@@ -60,7 +60,7 @@ iframe{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10
   .dl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
   a.btn{padding:8px 10px;font-size:12px;line-height:1.2;justify-content:center;text-align:center}
   .viewer-standalone{padding:6px;border-radius:12px}
-  iframe{height:85svh;border-radius:8px}
+  .pdf-embed{height:85svh;border-radius:8px}
 }
 </style>
 </head>
@@ -81,7 +81,7 @@ iframe{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10
     </div>
   </section>
   <section class="viewer-standalone">
-    <iframe id="pdfFrame"></iframe>
+    <embed id="pdfFrame" class="pdf-embed" type="application/pdf" />
   </section>
 </div>
 <script>
@@ -89,13 +89,12 @@ const documents = [
   {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
   {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
 ];
-  
 const docList = document.getElementById('docList');
 const frame = document.getElementById('pdfFrame');
 const dl = document.getElementById('downloadCurrent');
 const openBtn = document.getElementById('openNewTab');
 function loadDocument(doc){
-  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
+  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH&scrollbar=0';
   frame.src = withParams;
   dl.href = doc.file;
   dl.download = doc.file.split('/').pop();
@@ -112,4 +111,3 @@ documents.forEach((doc, idx) => {
 </script>
 </body>
 </html>
-
