@@ -1,177 +1,115 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CGS Tech Document Hub</title>
-  <meta name="description" content="Browse, preview, and download PDF resources from CGS Tech." />
-  <style>
-    :root{
-      --bg:#083355;        /* page background */
-      --card:#12141b;      /* dark card for buttons only */
-      --text:#e7e8ea;
-      --muted:#a7acb8;
-      --accent:#6aa5ff;
-      --accent2:#8df;
-      --border:#242837;
-      --frame:#faf6eb;     /* lighter champagne (near-white) around PDF */
-      --btn-border:#8fb8ff;/* brighter button border */
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-
-    header{display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0 24px;text-align:center}
-    .brand{display:flex;align-items:center;gap:10px}
-    .logo{width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%);box-shadow:0 10px 30px rgba(0,0,0,.4)}
-    h1{font-size:28px;margin:0;color:var(--text);letter-spacing:.3px;font-weight:700}
-    .subtitle{font-size:15px;color:var(--muted)}
-
-    /* Buttons live in a dark card for contrast */
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-    .doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
-    .doc-btn{
-      appearance:none;
-      border:1px solid var(--btn-border);
-      background:linear-gradient(145deg, #1b273d, #0f1828);
-      color:var(--text);
-      padding:16px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-      text-align:center;
-      transition:transform .1s ease, box-shadow .2s ease, background .3s ease, border-color .3s ease;
-      box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.3);
-      white-space:nowrap;
-    }
-    .doc-btn:hover{background:linear-gradient(145deg, #22324d, #152036);transform:translateY(-2px);border-color:#bcd6ff;box-shadow:inset -2px -2px 0 rgba(255,255,255,0.08), inset 2px 2px 0 rgba(0,0,0,0.55), 0 6px 14px rgba(50,150,255,0.25)}
-
-    .dl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    a.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#131a2a}
-    a.btn:hover{background:#152039}
-
-    /* Standalone viewer: NO dark card/frame around it */
-    .viewer-standalone{margin-top:16px;background:var(--frame);border-radius:16px;padding:10px}
-    /* Use small/large viewport units for mobile toolbars & fallback to JS var */
-    iframe{width:100%;height:min(78svh, calc(var(--vh, 1vh) * 78));border:0;background:var(--frame);border-radius:10px}
-
-    .notice{color:var(--muted);font-size:14px;margin:10px 2px}
-    footer{color:var(--muted);font-size:12px;margin:20px 4px 10px;text-align:center}
-
-    /* Mobile enhancements */
-    @media (max-width:760px){
-      .wrap{padding:14px}
-      h1{font-size:22px}
-      .subtitle{font-size:13px}
-      .card{padding:12px;border-radius:14px}
-      /* Turn the doc list into a horizontal chip row with scroll + snap */
-      .doc-list{display:flex;overflow-x:auto;gap:8px;padding-bottom:6px;margin-bottom:10px;scroll-snap-type:x mandatory}
-      .doc-list::-webkit-scrollbar{height:8px}
-      .doc-list::-webkit-scrollbar-thumb{background:#2a3752;border-radius:10px}
-      .doc-btn{padding:12px 14px;font-size:14px;scroll-snap-align:start}
-      .dl{gap:6px}
-      a.btn{flex:1;justify-content:center;padding:12px}
-      .viewer-standalone{padding:8px;border-radius:14px}
-      iframe{border-radius:8px}
-    }
-      /* --- Compact mobile-first refinements --- */
-    @media (max-width:760px){
-      .wrap{padding:14px}
-      h1{font-size:22px}
-      .subtitle{font-size:13px}
-
-      /* Controls card: soften look + tighter spacing */
-      .card{padding:12px;border-radius:14px;background:#0e1524;border-color:#1f2a44}
-
-      /* Turn document list into compact horizontal chips */
-      .doc-list{display:flex;overflow-x:auto;gap:8px;padding:2px 2px 8px;margin:0 0 10px}
-      .doc-list::-webkit-scrollbar{height:6px}
-      .doc-list::-webkit-scrollbar-thumb{background:#22324d;border-radius:10px}
-
-      .doc-btn{
-        padding:10px 12px;font-size:13px;border-radius:10px;
-        border:1px solid #9ec0ff;
-        background:linear-gradient(145deg,#1a2740,#111b2d);
-        box-shadow:none; /* remove heavy inner shadows on mobile */
-        white-space:nowrap
-      }
-
-      /* Action buttons side-by-side, smaller */
-      .dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-      a.btn{padding:12px;justify-content:center;font-size:14px;border-color:#1f2a44;background:#121a2e}
-      a.btn:hover{background:#15223a}
-
-      /* Viewer: thinner champagne frame, less rounding, taller space */
-      .viewer-standalone{margin-top:12px;padding:6px;border-radius:12px}
-      iframe{height:85svh;border-radius:8px}
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CGS Tech Document Hub</title>
+<style>
+:root{
+  --bg:#083355;
+  --card:#12141b;
+  --text:#e7e8ea;
+  --muted:#a7acb8;
+  --accent:#6aa5ff;
+  --accent2:#8df;
+  --border:#242837;
+  --frame:#faf6eb;
+  --btn-border:#8fb8ff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+header{text-align:center;margin-bottom:24px}
+.brand{display:flex;align-items:center;justify-content:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+.doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.doc-btn{
+  border:1px solid var(--btn-border);
+  background:linear-gradient(145deg, #1b273d, #0f1828);
+  color:var(--text);
+  padding:16px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+  text-align:center;
+  transition:transform .1s ease, box-shadow .2s ease;
+  box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45);
+  white-space:nowrap;
+}
+.doc-btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#bcd6ff}
+.dl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--btn-border);
+  background:linear-gradient(145deg, #1b273d, #0f1828);
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45);
+}
+a.btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#bcd6ff}
+.viewer-standalone{margin-top:16px;background:var(--frame);border-radius:16px;padding:10px}
+iframe{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10px}
+@media (max-width:760px){
+  .wrap{padding:14px}
+  .card{padding:12px;border-radius:14px}
+  .doc-list{display:flex;overflow-x:auto;gap:8px;padding-bottom:6px;margin-bottom:10px;scroll-snap-type:x mandatory}
+  .doc-btn{padding:10px 12px;font-size:13px;border-radius:10px;scroll-snap-align:start}
+  .dl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+  a.btn{padding:8px 10px;font-size:12px;line-height:1.2;justify-content:center;text-align:center}
+  .viewer-standalone{padding:6px;border-radius:12px}
+  iframe{height:85svh;border-radius:8px}
+}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>CGS Tech Document Hub</h1>
-      </div>
-      <div class="subtitle">Browse, preview, and download our PDF resources</div>
-    </header>
-
-    <!-- Buttons & controls inside dark card -->
-    <section class="card" aria-label="Document controls">
-      <div class="doc-list" id="docList"></div>
-      <div class="dl">
-        <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
-        <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
-      </div>
-      <p class="notice">Tip: If your browser blocks embedded PDFs, use “Open in new tab.”</p>
-    </section>
-
-    <!-- Standalone champagne viewer (no outer dark frame) -->
-    <section class="viewer-standalone" role="region" aria-label="PDF viewer">
-      <iframe id="pdfFrame" title="PDF viewer"></iframe>
-    </section>
-
-    <footer>© <span id="y"></span> CGS Tech. All rights reserved.</footer>
-  </div>
-
-  <script>
-    // Fix 100vh on mobile by setting --vh based on innerHeight
-    function setVH(){
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    setVH();
-    window.addEventListener('resize', setVH);
-
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    const documents = [
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>CGS Tech Document Hub</h1>
+    </div>
+    <div class="subtitle">Browse, preview, and download our PDF resources</div>
+  </header>
+  <section class="card">
+    <div class="doc-list" id="docList"></div>
+    <div class="dl">
+      <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
+      <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
+    </div>
+  </section>
+  <section class="viewer-standalone">
+    <iframe id="pdfFrame"></iframe>
+  </section>
+</div>
+<script>
+const documents = [
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
     ];
-    
-    const docList = document.getElementById('docList');
-    const frame = document.getElementById('pdfFrame');
-    const dl = document.getElementById('downloadCurrent');
-    const openBtn = document.getElementById('openNewTab');
-
-    function loadDocument(doc){
-      frame.src = doc.file;
-      dl.href = doc.file;
-      dl.download = doc.file.split('/').pop();
-      openBtn.href = doc.file;
-    }
-
-    documents.forEach((doc, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'doc-btn';
-      btn.textContent = doc.name;
-      btn.addEventListener('click', () => loadDocument(doc));
-      if(idx===0) loadDocument(doc);
-      docList.appendChild(btn);
-    });
-  </script>
+  
+const docList = document.getElementById('docList');
+const frame = document.getElementById('pdfFrame');
+const dl = document.getElementById('downloadCurrent');
+const openBtn = document.getElementById('openNewTab');
+function loadDocument(doc){
+  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
+  frame.src = withParams;
+  dl.href = doc.file;
+  dl.download = doc.file.split('/').pop();
+  openBtn.href = doc.file;
+}
+documents.forEach((doc, idx) => {
+  const btn = document.createElement('button');
+  btn.className = 'doc-btn';
+  btn.textContent = doc.name;
+  btn.addEventListener('click', () => loadDocument(doc));
+  if(idx===0) loadDocument(doc);
+  docList.appendChild(btn);
+});
+</script>
 </body>
 </html>
+
