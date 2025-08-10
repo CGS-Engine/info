@@ -7,13 +7,14 @@
   <meta name="description" content="Browse, preview, and download PDF resources from CGS Tech." />
   <style>
     :root{
-      --bg:#083355;
-      --card:#f9f3e1; /* light gold background */
-      --text:#1a1a1a;
-      --muted:#5c5c5c;
+      --bg:#083355; /* main page background */
+      --card:#12141b; /* card (viewer) background */
+      --outer-doc-bg:#f9f3e1; /* light gold around the document viewer */
+      --text:#e7e8ea;
+      --muted:#a7acb8;
       --accent:#6aa5ff;
       --accent2:#8df;
-      --border:#cbbf92;
+      --border:#242837;
     }
     *{box-sizing:border-box}
     body{
@@ -33,26 +34,30 @@
     .doc-btn{
       appearance:none;
       border:1px solid var(--border);
-      background:radial-gradient(150% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%);
-      color:#fff;
+      background:linear-gradient(145deg, #1b273d, #0f1828);
+      color:var(--text);
       padding:16px;
       border-radius:12px;
       cursor:pointer;
       font-weight:600;
       text-align:center;
-      transition:transform .1s ease, box-shadow .2s ease, background .3s ease, border-color .3s ease;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.3);
+      transition:transform .1s ease, box-shadow .2s ease, background .3s ease;
+      box-shadow:inset -2px -2px 4px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(0,0,0,0.5);
     }
     .doc-btn:hover{
-      background:radial-gradient(150% 120% at 20% 20%, var(--accent2), var(--accent) 30%, #3b4f75 70%, #101a2f 100%);
+      background:linear-gradient(145deg, #22324d, #152036);
       transform:translateY(-2px);
-      box-shadow:0 6px 14px rgba(50,150,255,0.4);
-      border-color:#6aa5ff;
+      box-shadow:inset -2px -2px 4px rgba(255,255,255,0.08), inset 2px 2px 4px rgba(0,0,0,0.6);
     }
     .dl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    a.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#e6dcb8}
-    a.btn:hover{background:#ded1a0}
-    .viewer{margin-top:14px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--card)}
+    a.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#131a2a}
+    a.btn:hover{background:#152039}
+    .outer-doc{
+      background:var(--outer-doc-bg);
+      padding:12px;
+      border-radius:16px;
+    }
+    .viewer{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--card)}
     .notice{color:var(--muted);font-size:14px;margin:10px 2px}
     iframe{width:100%;height:70vh;border:0;background:var(--card)}
     footer{color:var(--muted);font-size:12px;margin:20px 4px 10px;text-align:center}
@@ -83,8 +88,10 @@
 
       <p class="notice">Tip: If your browser blocks embedded PDF viewing, use “Open in new tab.”</p>
 
-      <div class="viewer" role="region">
-        <iframe id="pdfFrame" title="PDF viewer"></iframe>
+      <div class="outer-doc">
+        <div class="viewer" role="region">
+          <iframe id="pdfFrame" title="PDF viewer"></iframe>
+        </div>
       </div>
     </section>
 
@@ -100,7 +107,7 @@
       {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
       {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
     ];
-
+    
     const docList = document.getElementById('docList');
     const frame = document.getElementById('pdfFrame');
     const dl = document.getElementById('downloadCurrent');
