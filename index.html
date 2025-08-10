@@ -17,50 +17,46 @@
   --btn-border:#8fb8ff;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
-.wrap{max-width:1100px;margin:0 auto;padding:24px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;display:flex;flex-direction:column;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:24px;flex:1}
+
+/* Header */
 header{text-align:center;margin-bottom:24px}
-.brand{display:flex;align-items:center;justify-content:center;gap:10px}
-.logo{width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%)}
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+.brand h1{font-size:2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logo{flex-shrink:0;width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%)}
+
+/* Controls card */
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
 .doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
-.doc-btn{
-  border:1px solid var(--btn-border);
-  background:linear-gradient(145deg, #1b273d, #0f1828);
-  color:var(--text);
-  padding:16px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:600;
-  text-align:center;
-  transition:transform .1s ease, box-shadow .2s ease;
-  box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45);
-  white-space:nowrap;
-}
-.doc-btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#bcd6ff}
+.doc-btn{border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);padding:16px;border-radius:12px;cursor:pointer;font-weight:600;text-align:center;transition:transform .1s ease, box-shadow .2s ease, border-color .2s ease;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);white-space:nowrap}
+.doc-btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
+
+/* Action buttons */
 .dl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-a.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid var(--btn-border);
-  background:linear-gradient(145deg, #1b273d, #0f1828);
-  color:var(--text);
-  text-decoration:none;
-  box-shadow:inset -2px -2px 0 rgba(255,255,255,0.06), inset 2px 2px 0 rgba(0,0,0,0.45);
-}
-a.btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#bcd6ff}
-.viewer-standalone{margin-top:16px;background:var(--frame);border-radius:16px;padding:10px}
-.pdf-embed{width:100%;height:78svh;border:0;background:var(--frame);border-radius:10px;display:block}
+a.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);text-decoration:none;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
+a.btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
+
+/* Standalone viewer */
+.viewer-standalone{margin-top:16px}
+.pdf-scroll{background:var(--frame);border-radius:16px;padding:10px;height:78svh;overflow:auto;-webkit-overflow-scrolling:touch}
+.pdf-embed{width:100%;height:100%;border:0;background:var(--frame);border-radius:10px;display:block}
+
+/* Footer */
+footer{text-align:center;padding:12px;font-size:12px;color:var(--muted)}
+
+/* Mobile */
 @media (max-width:760px){
   .wrap{padding:14px}
+  .brand h1{font-size:1.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .card{padding:12px;border-radius:14px}
   .doc-list{display:flex;overflow-x:auto;gap:8px;padding-bottom:6px;margin-bottom:10px;scroll-snap-type:x mandatory}
   .doc-btn{padding:10px 12px;font-size:13px;border-radius:10px;scroll-snap-align:start}
   .dl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-  a.btn{padding:8px 10px;font-size:12px;line-height:1.2;justify-content:center;text-align:center}
-  .viewer-standalone{padding:6px;border-radius:12px}
-  .pdf-embed{height:85svh;border-radius:8px}
+  a.btn{padding:8px 10px;font-size:12px;line-height:1.2}
+  .viewer-standalone{margin-top:12px}
+  .pdf-scroll{padding:6px;border-radius:12px;height:85svh}
+  .pdf-embed{border-radius:8px}
 }
 </style>
 </head>
@@ -73,17 +69,24 @@ a.btn:hover{background:linear-gradient(145deg, #22324d, #152036);border-color:#b
     </div>
     <div class="subtitle">Browse, preview, and download our PDF resources</div>
   </header>
-  <section class="card">
+
+  <section class="card" aria-label="Document controls">
     <div class="doc-list" id="docList"></div>
     <div class="dl">
       <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
       <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
     </div>
   </section>
-  <section class="viewer-standalone">
-    <embed id="pdfFrame" class="pdf-embed" type="application/pdf" />
+
+  <section class="viewer-standalone" role="region" aria-label="PDF viewer">
+    <div class="pdf-scroll" id="pdfScroll">
+      <embed id="pdfFrame" class="pdf-embed" type="application/pdf" />
+    </div>
   </section>
 </div>
+<footer>
+  &copy; 2025 CGS Tech. All rights reserved.
+</footer>
 <script>
 const documents = [
   {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
@@ -94,7 +97,7 @@ const frame = document.getElementById('pdfFrame');
 const dl = document.getElementById('downloadCurrent');
 const openBtn = document.getElementById('openNewTab');
 function loadDocument(doc){
-  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH&scrollbar=0';
+  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
   frame.src = withParams;
   dl.href = doc.file;
   dl.download = doc.file.split('/').pop();
