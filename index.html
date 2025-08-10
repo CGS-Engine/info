@@ -1,116 +1,164 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>CGS Tech Document Hub</title>
-<style>
-:root{
-  --bg:#083355;
-  --card:#12141b;
-  --text:#e7e8ea;
-  --muted:#a7acb8;
-  --accent:#6aa5ff;
-  --accent2:#8df;
-  --border:#242837;
-  --frame:#faf6eb;
-  --btn-border:#8fb8ff;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;display:flex;flex-direction:column;min-height:100vh}
-.wrap{max-width:1100px;margin:0 auto;padding:24px;flex:1}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CGS Tech Document Hub</title>
+  <style>
+    :root{
+      --bg:#083355;            /* page background */
+      --text:#e7e8ea;
+      --muted:#a7acb8;
+      --card:#0f1828;          /* cards on mobile */
+      --border:#1f2a44;
+      --btn-border:#8fb8ff;    /* bright border like logo highlight */
+      --frame:#faf6eb;         /* warm “champagne” viewer bg on desktop */
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
 
-/* Header */
-header{text-align:center;margin-bottom:24px}
-.brand{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
-.brand h1{font-size:2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80vw}
-.logo{flex-shrink:0;width:42px;height:42px;border-radius:9px;background:radial-gradient(120% 120% at 20% 20%, var(--accent2), var(--accent) 40%, #2a3450 70%, #0e1422 100%)}
+    /* Header */
+    header{ text-align:center; margin:10px 0 18px }
+    .brand{ display:flex; align-items:center; justify-content:center; gap:10px }
+    .logo{ width:40px; height:40px; border-radius:9px;
+      background:radial-gradient(120% 120% at 20% 20%, #8df, #6aa5ff 40%, #2a3450 70%, #0e1422 100%);
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    h1{ margin:0; font-weight:800; letter-spacing:.2px; font-size:28px }
+    .subtitle{ color:var(--muted); font-size:14px; margin-top:6px }
 
-/* Controls card */
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-.doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
-.doc-btn{border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);padding:16px;border-radius:12px;cursor:pointer;font-weight:600;text-align:center;transition:transform .1s ease, box-shadow .2s ease, border-color .2s ease;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);white-space:nowrap}
-.doc-btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
+    /* Document buttons */
+    .panel{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px }
+    .docs{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x mandatory }
+    .docs::-webkit-scrollbar{ height:8px } .docs::-webkit-scrollbar-thumb{ background:#22324d; border-radius:8px }
+    .doc-btn{
+      scroll-snap-align:start;
+      border:1px solid var(--btn-border);
+      background:linear-gradient(145deg, #1b273d, #0f1828);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:600;
+      white-space:nowrap;
+      cursor:pointer;
+      transition:transform .1s ease, border-color .2s ease, background .2s ease;
+      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);
+    }
+    .doc-btn:hover{ background:linear-gradient(145deg,#22324d,#152036); border-color:#bcd6ff }
 
-/* Action buttons */
-.dl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-a.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--btn-border);background:linear-gradient(145deg,#1b273d,#0f1828);color:var(--text);text-decoration:none;box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45)}
-a.btn:hover{background:linear-gradient(145deg,#22324d,#152036);border-color:#bcd6ff}
+    /* Actions (mobile) */
+    .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      border:1px solid var(--btn-border);
+      background:linear-gradient(145deg,#1b273d,#0f1828);
+      color:var(--text); text-decoration:none;
+      padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px;
+      box-shadow:inset -2px -2px 0 rgba(255,255,255,.06), inset 2px 2px 0 rgba(0,0,0,.45);
+    }
+    .btn:hover{ background:linear-gradient(145deg,#22324d,#152036); border-color:#bcd6ff }
 
-/* Standalone viewer */
-.viewer-standalone{margin-top:16px}
-.pdf-scroll{background:var(--frame);border-radius:16px;padding:10px;height:78svh;overflow:auto;-webkit-overflow-scrolling:touch}
-.pdf-embed{width:100%;min-height:100%;border:0;background:var(--frame);border-radius:10px;display:block}
+    /* Desktop viewer (hidden on phones) */
+    .viewer{ display:none; margin-top:16px; background:var(--frame); border-radius:14px; padding:10px }
+    .viewer embed{ width:100%; height:78vh; border:0; border-radius:8px; background:var(--frame) }
 
-/* Footer */
-footer{text-align:center;padding:12px;font-size:12px;color:var(--muted)}
+    /* Footer */
+    footer{ text-align:center; color:var(--muted); font-size:12px; margin:18px 0 6px }
 
-/* Mobile */
-@media (max-width:760px){
-  .wrap{padding:14px}
-  .brand h1{font-size:1.4rem;max-width:65vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .card{padding:12px;border-radius:14px}
-  .doc-list{display:flex;overflow-x:auto;gap:8px;padding-bottom:6px;margin-bottom:10px;scroll-snap-type:x mandatory}
-  .doc-btn{padding:10px 12px;font-size:13px;border-radius:10px;scroll-snap-align:start}
-  .dl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-  a.btn{padding:8px 10px;font-size:12px;line-height:1.2}
-  .viewer-standalone{margin-top:12px}
-  .pdf-scroll{padding:6px;border-radius:12px;height:85svh}
-  .pdf-embed{border-radius:8px}
-}
-</style>
+    /* Desktop / tablets */
+    @media (min-width: 761px){
+      .wrap{ padding:24px }
+      h1{ font-size:34px }
+      .panel{ display:flex; align-items:center; gap:14px; padding:14px 16px }
+      .docs{ flex:1; overflow-x:visible; flex-wrap:wrap; padding:0; gap:10px }
+      .doc-btn{ padding:12px 16px; border-radius:12px }
+      .actions{ grid-template-columns:auto auto; gap:10px }
+      .viewer{ display:block }                 /* show embedded preview on desktop */
+      .btn.open-full{ display:none }           /* hide mobile-only open-full button on desktop */
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 760px){
+      h1{ font-size:22px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <div class="logo"></div>
-      <h1>CGS Tech Document Hub</h1>
-    </div>
-    <div class="subtitle">Browse, preview, and download our PDF resources</div>
-  </header>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>CGS Tech Document Hub</h1>
+      </div>
+      <div class="subtitle">Browse, preview, and download our PDF resources</div>
+    </header>
 
-  <section class="card" aria-label="Document controls">
-    <div class="doc-list" id="docList"></div>
-    <div class="dl">
-      <a id="downloadCurrent" class="btn" href="#" download>⬇️ Download current</a>
-      <a id="openNewTab" class="btn" href="#" target="_blank" rel="noopener">🗔 Open in new tab</a>
-    </div>
-  </section>
+    <!-- Controls -->
+    <section class="panel" aria-label="Choose a document">
+      <div id="docList" class="docs"></div>
+      <div class="actions">
+        <!-- Mobile-first: one-tap open full-screen + download -->
+        <a id="openFull" class="btn open-full" target="_blank" rel="noopener">🗔 Open full-screen</a>
+        <a id="downloadBtn" class="btn" download>⬇️ Download</a>
+      </div>
+    </section>
 
-  <section class="viewer-standalone" role="region" aria-label="PDF viewer">
-    <div class="pdf-scroll" id="pdfScroll">
-      <embed id="pdfFrame" class="pdf-embed" type="application/pdf" />
-    </div>
-  </section>
-</div>
-<footer>
-  &copy; 2025 CGS Tech. All rights reserved.
-</footer>
-<script>
-const documents = [
-  {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
-  {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
-];
-const docList = document.getElementById('docList');
-const frame = document.getElementById('pdfFrame');
-const dl = document.getElementById('downloadCurrent');
-const openBtn = document.getElementById('openNewTab');
-function loadDocument(doc){
-  const withParams = doc.file + (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
-  frame.src = withParams;
-  dl.href = doc.file;
-  dl.download = doc.file.split('/').pop();
-  openBtn.href = doc.file;
-}
-documents.forEach((doc, idx) => {
-  const btn = document.createElement('button');
-  btn.className = 'doc-btn';
-  btn.textContent = doc.name;
-  btn.addEventListener('click', () => loadDocument(doc));
-  if(idx===0) loadDocument(doc);
-  docList.appendChild(btn);
-});
-</script>
+    <!-- Desktop embedded preview -->
+    <section class="viewer" aria-label="Preview">
+      <embed id="pdfEmbed" type="application/pdf" />
+    </section>
+  </div>
+
+  <footer>© 2025 CGS Tech. All rights reserved.</footer>
+
+  <script>
+    // 1) List your docs here
+    const documents = [
+      {name:'CGS Engine: Quant-AI, Reinvented', file:'docs/CGS_Tech_v0.pdf'},
+      {name:'XAI-Driven Insights Across Key Market Periods', file:'docs/CONFIDENTIAL_params_timewindows_5760A_23Jun2025.pdf'}
+    ];
+
+    // 2) Elements
+    const docList = document.getElementById('docList');
+    const openFull = document.getElementById('openFull');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const embedEl = document.getElementById('pdfEmbed');
+
+    // 3) Simple responsive check
+    const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+
+    function applyDoc(doc) {
+      // Always set a good open link (works great on iPhone)
+      openFull.href = doc.file;
+
+      // Keep a clean filename for downloads
+      downloadBtn.href = doc.file;
+      downloadBtn.download = doc.file.split('/').pop();
+
+      // Only load the embedded preview on desktop/tablet
+      if (!isMobile()) {
+        const params = (doc.file.includes('#') ? '&' : '#') + 'zoom=page-width&view=FitH';
+        embedEl.src = doc.file + params;
+      }
+    }
+
+    // Build buttons and load the first doc
+    documents.forEach((doc, i) => {
+      const b = document.createElement('button');
+      b.className = 'doc-btn';
+      b.textContent = doc.name;
+      b.addEventListener('click', () => applyDoc(doc));
+      docList.appendChild(b);
+      if (i === 0) applyDoc(doc);
+    });
+
+    // Re-apply if the screen size changes (rotate, resize)
+    window.addEventListener('resize', () => {
+      const current = documents.find(d => openFull.href.endsWith(d.file));
+      if (current) applyDoc(current);
+    });
+  </script>
 </body>
 </html>
+
