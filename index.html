@@ -79,14 +79,43 @@
 
     /* Desktop/tablet layout tweaks */
     @media (min-width:761px){
-      .wrap{padding:24px}
-      .panel{display:flex;align-items:center;gap:14px;padding:14px 16px}
-      .docs{flex:1;overflow-x:visible;flex-wrap:wrap;padding:0;gap:10px}
-      .doc-btn{padding:12px 16px;border-radius:12px}
-      .actions{grid-template-columns:auto auto;gap:10px}
-      .viewer{display:block}
-      .mobile-preview{display:none}
-    }
+      /* Keep the card but stack its content (no side-by-side layout) */
+      .panel{
+        display:block;                /* was: display:flex */
+        padding:14px 16px;
+        gap:0;
+      }
+
+  /* Keep the horizontal scroller on desktop too */
+  .docs{
+    display:flex;                 /* was: flex + wrap */
+    overflow-x:auto;              /* was: visible */
+    gap:10px;
+    padding:0 0 8px;
+    scroll-snap-type:x mandatory; /* same behavior as mobile */
+  }
+
+  /* Ensure doc buttons match action button size */
+  .doc-btn{
+    padding:10px 12px;
+    font-size:14px;
+    scroll-snap-align:start;
+  }
+
+  /* Actions sit below the docs row */
+  .actions{
+    display:grid;
+    grid-template-columns:auto auto;
+    gap:10px;
+    margin-top:12px;              /* add a little spacing under the docs row */
+    justify-content:start;
+  }
+
+  /* Keep the viewer rules as they are */
+  .viewer{display:block}
+  .mobile-preview{display:none}
+}
+
   </style>
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
